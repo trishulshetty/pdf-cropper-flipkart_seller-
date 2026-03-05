@@ -17,17 +17,18 @@ function App() {
     const [isPreviewLoading, setIsPreviewLoading] = useState(false);
 
     // Cropping States (Percentages)
-    const [splitPoint, setSplitPoint] = useState(48); // Horizontal split
-    const [labelWidth, setLabelWidth] = useState(90); // Vertical cut for label
-    const [labelLeft, setLabelLeft] = useState(5);   // Horizontal offset for label
-    const [labelTopOffset, setLabelTopOffset] = useState(0); // Top cut for label
+    const [splitPoint, setSplitPoint] = useState(45.5); // Horizontal split
+    const [labelWidth, setLabelWidth] = useState(36); // Vertical cut for label
+    const [labelLeft, setLabelLeft] = useState(32);   // Horizontal offset for label
+    const [labelTopOffset, setLabelTopOffset] = useState(3); // Top cut for label
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        if (file) {
+        if (file && !isComplete && !isProcessing) {
             renderPreview();
+            processPdf();
         }
     }, [file]);
 
@@ -55,7 +56,7 @@ function App() {
             canvas.height = scaledViewport.height;
             canvas.width = scaledViewport.width;
 
-            await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
+            await page.render({ canvasContext: context!, viewport: scaledViewport }).promise;
         } catch (err) {
             console.error('Preview error:', err);
             setError('Failed to render PDF preview. You can still proceed with splitting.');
@@ -252,81 +253,35 @@ function App() {
                         </div>
                     </div>
 
-                    <div className="controls-grid">
-                        <div className="control-group">
-                            <label>Horizontal Split (Main)</label>
-                            <input
-                                type="range"
-                                className="range-slider"
-                                min="10" max="90"
-                                value={splitPoint}
-                                onChange={(e) => setSplitPoint(parseInt(e.target.value))}
-                            />
-                            <span style={{ fontSize: '0.8rem' }}>Line at {splitPoint}% from top</span>
+                    <div className="processing-dashboard">
+                        <div className="status-header">
+                            <Loader2 className="animate-spin" size={32} />
+                            <h2>Processing Documents...</h2>
+                            <p>Using optimized Flipkart dimensions (Hardcoded)</p>
                         </div>
 
-                        <div className="control-group">
-                            <label>Label Width (Vertical)</label>
-                            <input
-                                type="range"
-                                className="range-slider"
-                                min="20" max="100"
-                                value={labelWidth}
-                                onChange={(e) => setLabelWidth(parseInt(e.target.value))}
-                            />
-                            <span style={{ fontSize: '0.8rem' }}>{labelWidth}% width</span>
-                        </div>
-
-                        <div className="control-group">
-                            <label>Label Left Offset</label>
-                            <input
-                                type="range"
-                                className="range-slider"
-                                min="0" max="50"
-                                value={labelLeft}
-                                onChange={(e) => setLabelLeft(parseInt(e.target.value))}
-                            />
-                            <span style={{ fontSize: '0.8rem' }}>{labelLeft}% from left</span>
-                        </div>
-
-                        <div className="control-group">
-                            <label>Label Top Cut</label>
-                            <input
-                                type="range"
-                                className="range-slider"
-                                min="0" max="20"
-                                value={labelTopOffset}
-                                onChange={(e) => setLabelTopOffset(parseInt(e.target.value))}
-                            />
-                            <span style={{ fontSize: '0.8rem' }}>{labelTopOffset}% from top</span>
-                        </div>
-
-                        <div className="control-group" style={{ justifyContent: 'flex-end' }}>
-                            <button
-                                className="btn-primary"
-                                onClick={processPdf}
-                                disabled={isProcessing}
-                                style={{ width: '100%' }}
-                            >
-                                {isProcessing ? (
-                                    <><Loader2 className="animate-spin" /> Processing...</>
-                                ) : (
-                                    <><Scissors size={18} /> Split & Download</>
-                                )}
-                            </button>
-                        </div>
-                    </div>
-
-                    {isProcessing && (
-                        <div style={{ marginTop: '1rem' }}>
+                        <div className="progress-container">
                             <div className="progress-bar">
                                 <div
                                     className="progress-fill"
                                     style={{ width: `${(processedCount / pageCount) * 100}%` }}
                                 ></div>
                             </div>
+                            <div className="progress-stats">
+                                <span>{processedCount} / {pageCount} Pages</span>
+                                <span>{Math.round((processedCount / (pageCount || 1)) * 100)}%</span>
+                            </div>
                         </div>
-                    )}
+
+                        <div className="dimension-pills">
+                            <div className="pill">Split: 45%</div>
+                            <div className="pill">Width: 36%</div>
+                            <div className="pill">Offset: 32%</div>
+                            <div className="pill">Top Cut: 3%</div>
+                        </div>
+                    </div>
+
+
 
                     <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                         <button
