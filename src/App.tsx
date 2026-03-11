@@ -176,9 +176,9 @@ function App() {
     };
 
     return (
-        <div className="glass-card" style={{ maxWidth: '900px' }}>
-            <h1>Flipkart PDF Pro</h1>
-            <p className="subtitle">Visual Splitting & Precision Cropping</p>
+        <div className="glass-card max-center">
+            <h1>Flipkart Label Pro</h1>
+            <p className="subtitle">High-Performance PDF Splitter</p>
 
             {!file ? (
                 <div
@@ -195,25 +195,25 @@ function App() {
                         accept=".pdf"
                         style={{ display: 'none' }}
                     />
-                    <Upload className="upload-icon" />
-                    <h3>Select your Shipping PDF</h3>
-                    <p>The PDF will be previewed for precise cropping</p>
+                    <Upload className="upload-icon" strokeWidth={1.5} />
+                    <h3>Upload Shipping PDF</h3>
+                    <p>LOCAL EDGE PROCESSING • SECURE</p>
                 </div>
             ) : !isComplete ? (
                 <div className="editor-layout">
                     <div className="split-preview-container">
                         {isPreviewLoading && (
-                            <div className="preview-loader" style={{ position: 'absolute', zIndex: 30 }}>
+                            <div className="absolute-center">
                                 <Loader2 className="animate-spin" size={48} color="white" />
                             </div>
                         )}
 
-                        <div className="preview-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
+                        <div className="preview-wrapper">
                             <canvas ref={canvasRef} className="pdf-canvas"></canvas>
 
                             {!isPreviewLoading && !error && (
-                                <div className="preview-hint" style={{ position: 'absolute', bottom: '10px', right: '10px', fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', zIndex: 25 }}>
-                                    Page 1 Preview
+                                <div className="preview-hint">
+                                    PAGE 1 PREVIEW
                                 </div>
                             )}
 
@@ -234,7 +234,9 @@ function App() {
                                         height: `${splitPoint - labelTopOffset}%`
                                     }}
                                 >
-                                    <span className="preview-label" style={{ top: '10px' }}>Label Area</span>
+                                    <div className="preview-label-top">
+                                        <span className="preview-label">LABEL AREA</span>
+                                    </div>
                                 </div>
 
                                 {/* Invoice Highlight Area (Blue) */}
@@ -247,7 +249,9 @@ function App() {
                                         height: `${100 - splitPoint}%`
                                     }}
                                 >
-                                    <span className="preview-label" style={{ bottom: '10px' }}>Invoice Area</span>
+                                    <div className="preview-label-bottom">
+                                        <span className="preview-label">INVOICE AREA</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -255,9 +259,8 @@ function App() {
 
                     <div className="processing-dashboard">
                         <div className="status-header">
-                            <Loader2 className="animate-spin" size={32} />
-                            <h2>Processing Documents...</h2>
-                            <p>Using optimized Flipkart dimensions (Hardcoded)</p>
+                            <h2>Processing Documents</h2>
+                            <p>APPLYING CROP SPECIFICATIONS</p>
                         </div>
 
                         <div className="progress-container">
@@ -274,46 +277,44 @@ function App() {
                         </div>
 
                         <div className="dimension-pills">
-                            <div className="pill">Split: 45%</div>
-                            <div className="pill">Width: 36%</div>
-                            <div className="pill">Offset: 32%</div>
-                            <div className="pill">Top Cut: 3%</div>
+                            <div className="pill"><Scissors size={12} strokeWidth={2.5} /> SPLIT: 45%</div>
+                            <div className="pill"><Move size={12} strokeWidth={2.5} /> WIDTH: 36%</div>
+                            <div className="pill"><Move size={12} strokeWidth={2.5} /> OFFSET: 32%</div>
+                            <div className="pill"><Scissors size={12} strokeWidth={2.5} /> TOP: 3%</div>
                         </div>
                     </div>
 
 
 
-                    <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                    <div className="text-center mt-2">
                         <button
                             onClick={() => setFile(null)}
-                            style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.9rem' }}
+                            className="btn-ghost-danger"
                         >
                             Cancel & Change File
                         </button>
                     </div>
                 </div>
             ) : (
-                <div className="success-badge" style={{ flexDirection: 'column', gap: '1.5rem', padding: '4rem 0' }}>
-                    <CheckCircle2 size={64} />
-                    <div style={{ textAlign: 'center' }}>
-                        <h2>Processing Complete!</h2>
-                        <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-                            Generated {pageCount} pairs of documents.
-                        </p>
-                    </div>
+                <div className="success-badge">
+                    <CheckCircle2 size={48} strokeWidth={1.5} style={{ marginBottom: '1.5rem', color: '#ffffff' }} />
+                    <h2>Process Complete</h2>
+                    <p>
+                        LABELS + INVOICE GENERATED 
+                    </p>
                     <button
                         className="btn-primary"
                         onClick={() => { setFile(null); setIsComplete(false); }}
                     >
-                        Start New Split
+                        PROCESS ANOTHER
                     </button>
                 </div>
             )}
 
             {error && <div className="error-msg" style={{ padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '8px', marginTop: '1rem', textAlign: 'center' }}>{error}</div>}
 
-            <footer style={{ marginTop: '3rem', fontSize: '0.8rem', opacity: 0.5 }}>
-                Flipkart Label Separator v2.0 • Edge Processing
+            <footer>
+                FLIPKART LABEL PRO • VERSION 2.0
             </footer>
         </div>
     );
